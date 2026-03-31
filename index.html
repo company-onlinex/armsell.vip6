@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEN-TECH | Evolución Programada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scanline"></div>
+    <header class="main-header">
+        <div class="logo">GEN<span>_CORP</span></div>
+        <nav class="status-bar">
+            <div class="status-item">BIO-SYNC: <span>98%</span></div>
+            <div class="status-item">CREDITS: <span id="user-credits">50.000</span></div>
+        </nav>
+    </header>
+
+    <section class="hero-engine">
+        <div class="glitch-title" data-text="MODIFICA_TU_DESTINO">MODIFICA_TU_DESTINO</div>
+        <p class="subtitle">Catálogo de secuencias de ADN sintético de Grado Militar.</p>
+    </section>
+
+    <main class="grid-container" id="product-grid">
+        </main>
+
+    <div id="modal-purchase" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modal-name">INICIALIZANDO...</h2>
+            <div class="dna-loader"></div>
+            <p id="modal-info"></p>
+            <div class="actions">
+                <button class="confirm-btn" onclick="processDna()">VINCULAR ADN</button>
+                <button class="cancel-btn" onclick="toggleModal()">ABORTAR</button>
+            </div>
+        </div>
+    </div>
+<style>
+    :root { --neon: #00ffcc; --dark: #0a0a0b; --accent: #ff0055; --glass: rgba(0, 255, 204, 0.1); }
+    body { background: var(--dark); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; overflow-x: hidden; }
+    .scanline { position: fixed; top: 0; width: 100%; height: 4px; background: var(--glass); z-index: 10; animation: scan 4s linear infinite; }
+    @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
+    
+    .main-header { display: flex; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid var(--neon); background: rgba(0,0,0,0.8); }
+    .logo { font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 4px; }
+    .logo span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+    
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px; }
+    .gene-card { background: var(--glass); border: 1px solid var(--neon); padding: 25px; position: relative; transition: 0.4s; clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%); }
+    .gene-card:hover { transform: scale(1.03); background: rgba(0, 255, 204, 0.2); box-shadow: 0 0 20px var(--neon); }
+    
+    .glitch-title { font-family: 'Orbitron'; font-size: 3.5rem; text-align: center; margin-top: 40px; color: var(--neon); position: relative; }
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-box { border: 2px solid var(--neon); padding: 40px; max-width: 500px; text-align: center; background: #000; }
+    
+    button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px 25px; cursor: pointer; font-family: 'Orbitron'; transition: 0.3s; }
+    button:hover { background: var(--neon); color: var(--dark); }
+    .cancel-btn { border-color: var(--accent); color: var(--accent); }
+      </style>
+
+  <script>
+    const GENETIC_DB = [
+        { id: 'K7', name: 'REFLEJO_RAYO', price: 15000, type: 'BÉLICO', desc: 'Aumenta la velocidad de reacción a 0.01s.' },
+        { id: 'N1', name: 'NEURO_MÁSTER', price: 22000, type: 'COGNITIVO', desc: 'Capacidad para procesar 4 hilos de pensamiento simultáneos.' },
+        { id: 'S4', name: 'TEJIDO_TITÁN', price: 30000, type: 'FISIOLÓGICO', desc: 'Densidad muscular incrementada para resistir impactos de alto calibre.' },
+        { id: 'X0', name: 'ÓPTICA_GHOST', price: 12000, type: 'SENSORIAL', desc: 'Visión en espectro infrarrojo y ultravioleta integrado.' }
+    ];
+
+    const grid = document.getElementById('product-grid');
+    
+    function renderProducts() {
+        grid.innerHTML = GENETIC_DB.map(item => `
+            <div class="gene-card">
+                <small style="color:var(--accent)">COD: ${item.id}</small>
+                <h2>${item.name}</h2>
+                <p>${item.desc}</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="price">${item.price} CR</span>
+                    <button onclick="selectDna('${item.id}')">COMPRAR</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function selectDna(id) {
+        const item = GENETIC_DB.find(g => g.id === id);
+        document.getElementById('modal-name').innerText = item.name;
+        document.getElementById('modal-info').innerText = `¿Desea iniciar la transcripción de ${item.name} por ${item.price} créditos?`;
+        toggleModal();
+    }
+
+    function toggleModal() {
+        const m = document.getElementById('modal-purchase');
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function processDna() {
+        alert("SECUENCIA INYECTADA: Reiniciando metabolismo del usuario...");
+        toggleModal();
+    }
+
+    window.onload = renderProducts;
+</script>
+</body>
+</html>

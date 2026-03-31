@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictor Pro | AI Trading Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Definición de Variables y Reset (Parte de CSS en Parte 2) */
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --border-color: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-chart-line"></i> PREDICT<span>PRO</span></div>
+        <div class="nav-links">
+            <button class="active">Dashboard</button>
+            <button>Historial</button>
+            <button>Configuración</button>
+        </div>
+      <style>
+        /* CONTINUACIÓN DE ESTILOS (PARTE 2 DE 4) */
+        .container { padding: 20px; max-width: 1400px; margin: 0 auto; }
+        .navbar { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 30px; background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--accent-blue); }
+        .nav-links button { 
+            background: none; border: none; color: #94a3b8; margin: 0 15px; 
+            cursor: pointer; font-weight: 600; transition: 0.3s;
+        }
+        .nav-links button.active { color: var(--accent-blue); border-bottom: 2px solid var(--accent-blue); }
+        
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; margin-top: 30px; 
+        }
+        .stat-card { 
+            background: var(--card-bg); padding: 25px; border-radius: 16px; 
+            border: 1px solid var(--border-color); transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+        .stat-card p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px; }
+        .trend { font-weight: bold; font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; }
+        .up { background: rgba(34, 197, 94, 0.1); color: var(--accent-green); }
+        .down { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+
+        .main-chart-container { 
+            background: var(--card-bg); margin-top: 30px; padding: 30px; 
+            border-radius: 20px; border: 1px solid var(--border-color);
+        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .time-filters button {
+            background: #334155; border: none; color: white; padding: 8px 16px;
+            border-radius: 8px; margin-left: 5px; cursor: pointer; font-size: 0.8rem;
+        }
+        .time-filters button.active { background: var(--accent-blue); }
+
+        .prediction-panel {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 30px;
+        }
+        .prediction-list { background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .predict-item {
+            display: flex; justify-content: space-between; padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .predict-item:last-child { border: none; }
+        
+        /* Simulación de Terminal de Carga AI */
+        .ai-terminal {
+            background: #000; color: #0f0; font-family: 'Courier New', monospace;
+            padding: 15px; border-radius: 8px; font-size: 0.8rem; height: 200px;
+            overflow-y: auto; margin-top: 20px; border: 1px solid #004400;
+        }
+          </style>
+<script>
+        /* LÓGICA DE PROCESAMIENTO (PARTE 3 DE 4) */
+        const PredictionEngine = {
+            generateHistory(points = 100) {
+                let data = [];
+                let basePrice = 60000;
+                for(let i = 0; i < points; i++) {
+                    basePrice += (Math.random() - 0.5) * 500;
+                    data.push({ x: i, y: basePrice });
+                }
+                return data;
+            },
+            
+            predict(history, timeframe) {
+                // Algoritmo de regresión lineal simple + factor de volatilidad
+                const lastPrice = history[history.length - 1].y;
+                let projection = [];
+                let iterations = timeframe === 'day' ? 24 : timeframe === 'week' ? 7 : 30;
+                
+                for(let i = 1; i <= iterations; i++) {
+                    const volatility = (Math.random() - 0.48) * 1000; // Sesgo ligeramente alcista
+                    projection.push(lastPrice + (volatility * i));
+                }
+                return projection;
+            }
+        };
+
+        const UIController = {
+            logToTerminal(message) {
+                const term = document.getElementById('ai-log');
+                const line = document.createElement('div');
+                line.textContent = `> [${new Date().toLocaleTimeString()}] ${message}`;
+                term.appendChild(line);
+                term.scrollTop = term.scrollHeight;
+            },
+            updatePrices() {
+                const priceEl = document.getElementById('current-price');
+                const newPrice = 64000 + (Math.random() * 500);
+                priceEl.innerText = `$${newPrice.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            }
+        };
+          </script>
+
+      <section class="prediction-panel">
+            <div class="main-chart-container">
+                <div class="chart-header">
+                    <h3>Análisis de Tendencia Proyectada</h3>
+                    <div class="time-filters">
+                        <button onclick="updateView('day')">24H</button>
+                        <button onclick="updateView('week')" class="active">7 Días</button>
+                        <button onclick="updateView('month')">30 Días</button>
+                    </div>
+                </div>
+                <canvas id="tradingChart" height="400"></canvas>
+            </div>
+
+            <div class="prediction-list">
+                <h3>Predicciones IA</h3>
+                <div id="predictions-container">
+                    </div>
+                <div class="ai-terminal" id="ai-log">
+                    <div>> Inicializando motor neuronal...</div>
+                    <div>> Analizando patrones de mercado...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let mainChart;
+        function initChart() {
+            const ctx = document.getElementById('tradingChart').getContext('2d');
+            const history = PredictionEngine.generateHistory(50);
+            const projection = PredictionEngine.predict(history, 'week');
+            
+            mainChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 60}, (_, i) => i),
+                    datasets: [{
+                        label: 'Precio Histórico',
+                        data: history.map(d => d.y),
+                        borderColor: '#38bdf8',
+                        tension: 0.4,
+                        fill: false
+                    }, {
+                        label: 'Predicción IA',
+                        data: [...new Array(49).fill(null), history[49].y, ...projection],
+                        borderColor: '#22c55e',
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#334155' } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function updateView(timeframe) {
+            UIController.logToTerminal(`Cambiando escala a: ${timeframe}...`);
+            UIController.logToTerminal(`Ejecutando simulación Monte Carlo para ${timeframe}...`);
+            // Lógica para actualizar los datos de la gráfica según el tiempo seleccionado
+            const newHistory = PredictionEngine.generateHistory(50);
+            const newProj = PredictionEngine.predict(newHistory, timeframe);
+            mainChart.data.datasets[0].data = newHistory.map(d => d.y);
+            mainChart.data.datasets[1].data = [...new Array(49).fill(null), newHistory[49].y, ...newProj];
+            mainChart.update();
+        }
+
+        // Ejecución inicial
+        window.onload = () => {
+            initChart();
+            setInterval(UIController.updatePrices, 3000);
+            UIController.logToTerminal("Sistema listo. Esperando señales...");
+        };
+    </script>
+</body>
+</html>
+    
